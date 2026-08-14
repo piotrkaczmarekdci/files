@@ -1,0 +1,15 @@
+select kk.IDKK, kk.ID_KONTRAKT,
+(select max(dt.BLOKDATA) from SPOTLISTA s, bloklista bl, blokprogram bp, dniotwarte dt where s.id_kontrakt=k.idkontrakt and s.ID_BLOK=bl.IDBLOK and bp.IDBLOKPROGRAM=bl.ID_BLOKPROGRAM and dt.IDDNIOTWARTE=bp.ID_DNIOTWARTE) as lastday,
+(select count(*) from multi_orders mo where mo.ID_MULTIKONTRAKT=k.idkontrakt) as IsPodzlecenie,
+(select count(*) from multi_orders mo where mo.ID_MASTERKONTRAKT=k.idkontrakt) as IsMasterZlecenie,
+(select top 1 k1.numerkontrakt from multi_orders mo, kontraktlista k1 where k1.idkontrakt=mo.id_masterkontrakt and mo.ID_MULTIKONTRAKT=k.idkontrakt) as MasterNumer,
+(select ISPMP from KONTRAKTLISTA_SYSTEM_EXT  where NUMERKONTRAKT = k.numerkontrakt) as ISPMP,
+(select count(*) from REZ_LU_KONTRAKT luk where luk.id_kontraktlista=k.idkontrakt) as iloscumow1,
+(select count(*) from  multi_orders mo, kontraktlista kmaster, REZ_LU_KONTRAKT luk1  where k.idkontrakt=mo.id_multikontrakt and mo.id_masterkontrakt=kmaster.idkontrakt and kmaster.idkontrakt=luk1.id_kontraktlista) as iloscumow2,
+(select COUNT(*) from fakturazbiorcza_kk fzkk, fakturazbiorcza fz where fzkk.id_kk=kk.idkk and fzkk.id_fz=fz.idfz) as IsFZ,
+(select top 1 fz.numerfaktury from fakturazbiorcza_kk fzkk, fakturazbiorcza fz where fzkk.id_kk=kk.idkk and fzkk.id_fz=fz.idfz) as numerFZ,
+(select top 1 fz.idFZ from fakturazbiorcza_kk fzkk, fakturazbiorcza fz where fzkk.id_kk=kk.idkk and fzkk.id_fz=fz.idfz) as IdFZ,
+(select TOP 1 sz.NUMERZAMOWIENIA from sponsoring_zamowienie sz, sponsoring_zamowienie_channels szc where k.IDKONTRAKT=szc.ID_SUBORDER and szc.ID_SZ=sz.IDSZ) as numerZL,
+(SELECT mop.IS_WO_DIGITAL FROM MULTI_ORDERS_PARAMS mop WHERE mop.ID_KONTRAKT=k.IDKONTRAKT) AS IS_WO_DIGITAL
+from kontrakt_korekty kk, kontraktlista k, blokperiod bd
+where kk.id_kontrakt=k.idkontrakt and k.id_okres=bd.idblokperiod and bd.okresblokperiod in (2026*12+7)
