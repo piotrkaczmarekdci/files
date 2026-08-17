@@ -1,0 +1,10 @@
+    SELECT s.id_kontrakt, MAX(dt.BLOKDATA) AS BLOKDATA_MAX
+	into #tblTemp
+    FROM SPOTLISTA s
+    JOIN BLOKLISTA   bl ON s.ID_BLOK          = bl.IDBLOK
+    JOIN BLOKPROGRAM bp ON bp.IDBLOKPROGRAM   = bl.ID_BLOKPROGRAM
+    JOIN DNIOTWARTE  dt ON dt.IDDNIOTWARTE         = bp.ID_DNIOTWARTE   
+    JOIN kontraktlista k2  ON k2.idkontrakt = s.id_kontrakt
+    JOIN blokperiod bd2    ON k2.id_okres   = bd2.idblokperiod
+                          AND bd2.okresblokperiod = (2026*12+7)
+    GROUP BY s.id_kontrakt
