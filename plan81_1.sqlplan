@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.564" Build="16.0.4255.1" xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementCompId="1" StatementEstRows="102818" StatementId="1" StatementOptmLevel="FULL" CardinalityEstimationModelVersion="150" StatementSubTreeCost="73.1238" StatementText="SELECT&#xD;&#xA;    kk.IDKK,&#xD;&#xA;    kk.ID_KONTRAKT,&#xD;&#xA;&#xD;&#xA;    spot_agg.BLOKDATA_MAX&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;FROM kontrakt_korekty kk&#xD;&#xA;JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt&#xD;&#xA;JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod&#xD;&#xA;                      AND bd.okresblokperiod = (2026*12+7)&#xD;&#xA;&#xD;&#xA;-- MAX(BLOKDATA) zamiast subquery z 4 tabelami&#xD;&#xA;LEFT JOIN (&#xD;&#xA;    SELECT s.id_kontrakt, MAX(dt.BLOKDATA) AS BLOKDATA_MAX&#xD;&#xA;    FROM SPOTLISTA s&#xD;&#xA;    JOIN BLOKLISTA   bl ON s.ID_BLOK          = bl.IDBLOK&#xD;&#xA;    JOIN BLOKPROGRAM bp ON bp.IDBLOKPROGRAM   = bl.ID_BLOKPROGRAM&#xD;&#xA;    JOIN DNIOTWARTE  dt ON dt.IDDNIOTWARTE         = bp.ID_DNIOTWARTE   &#xD;&#xA;    GROUP BY s.id_kontrakt&#xD;&#xA;) spot_agg ON spot_agg.id_kontrakt = k.idkontrakt" StatementType="SELECT" QueryHash="0x5C544805379C165B" QueryPlanHash="0x692070171454B92C" RetrievedFromCache="true" StatementSqlHandle="0x090031115BCFE19CE1C4E3B1D7044A38D2770000000000000000000000000000000000000000000000000000" DatabaseContextSettingsId="13" ParentObjectId="0" StatementParameterizationType="0" SecurityPolicyApplied="false" BatchModeOnRowStoreUsed="true">
+          <StatementSetOptions ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" ARITHABORT="true" CONCAT_NULL_YIELDS_NULL="true" NUMERIC_ROUNDABORT="false" QUOTED_IDENTIFIER="true" />
+          <QueryPlan DegreeOfParallelism="4" MemoryGrant="238408" CachedPlanSize="272" CompileTime="63" CompileCPU="57" CompileMemory="6000">
+            <ThreadStat Branches="1" UsedThreads="4">
+              <ThreadReservation NodeId="0" ReservedThreads="5" />
+            </ThreadStat>
+            <MemoryGrantInfo SerialRequiredMemory="9216" SerialDesiredMemory="210688" RequiredMemory="36936" DesiredMemory="238408" RequestedMemory="238408" GrantWaitTime="0" GrantedMemory="238408" MaxUsedMemory="164864" MaxQueryMemory="2210768" LastRequestedMemory="410824" IsMemoryGrantFeedbackAdjusted="Yes: Adjusting" />
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="204800" EstimatedPagesCached="76800" EstimatedAvailableDegreeOfParallelism="3" MaxCompileMemory="6532968" />
+            <OptimizerStatsUsage>
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_OKRES]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:06:28.36" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_NUMERKONTRAKT]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:48.25" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_PAKIET]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:02:59.79" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLENGTHINDEXLIST_ID_LENGTHINDEXLIST_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:01.69" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IDX_KONTRAKT_KOREKTY_KSEFNUMERFAKTURY]" ModificationCount="2372" SamplingPercent="100" LastUpdate="2026-08-14T05:39:36.82" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[BLOKLISTA_P_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:10.31" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[_WA_Sys_00000018_0DDAC090]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:37.84" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Statistics="[BLOKPROGRAM_PK_P_IDX]" ModificationCount="141" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.28" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_ID_KONTRAKT_ISTODELETE]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:03.68" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_BLOK_ID_BLOK_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:34.31" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_LANGUAGE_ID_LANGUAGE_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:18.19" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTSESJA_ID_SESJA_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:16.03" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[FK_BLOKSTATUS_ID_BLOKSTATUS_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:14.52" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_DEFAULTTARGET_ID_DEFAULTTARGET_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.07" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IDX_KONTRAKT_KOREKTY_NUMERFAKTURY]" ModificationCount="2372" SamplingPercent="100" LastUpdate="2026-08-14T05:39:34.73" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[KONTRAKT_KOREKTY_IDKK_IDX]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:37:39.7" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[INTEG_362_ID_RODZAJKONTRAKT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:36.77" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KLIENT_ID_KLIENT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:57.57" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX2_BLOKLISTA_ID_PRESUF]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:53.32" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[UNQ_NUMER_ROK_UN_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:39.28" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_OKRES_ID_OKRES_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:20.17" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[UN_OKRES_UN_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.09" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IDX_KONTRAKT_KOREKTY_ID_KSK]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:39:17.76" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_CHANNEL]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:45.72" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_1_ID_LCT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:03.7" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTDAYPART_ID_DP_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:59.64" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[_WA_Sys_00000003_483D37A6]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:14.68" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_OKRES_ID_CHANNEL_GRPKUPIONE]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:36.92" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_4_ID_EVENT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:09.87" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_2_ID_AGBSTRUCTURE_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:05.83" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[KONTRAKT_KOREKTY_IDKONTRAKT_IDX]" ModificationCount="2372" SamplingPercent="100" LastUpdate="2026-08-14T05:37:37.29" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_KONTRAKT_ID_KONTRAKT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:42.68" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_BLOKDAYPARTLISTA_ID_DP_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.06" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[BLOKPERIOD_PK_P_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.01" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_KLIENT_ID_OKRES]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:43.68" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_POSITIONINBREAK]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:35.42" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTAA8D90]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:02:53.17" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_TARGET_ID_TARGET_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:28.55" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_REGION_ID_REGION_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:24.23" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_PRZELICZNIKLIST_ID_PRZELICZNIKLISTA_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.08" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX1_BLOKLISTA_DELETED]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:26.75" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_KLIENT_ZAFAKTUROWANY]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:14.69" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[FK_BLOKRODZAJ111_ID_BLOKRODZAJ_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:13.95" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Statistics="[FK_DNIOTWARTE_ID_DNIOTWARTE_FK_IDX]" ModificationCount="141" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.52" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_PROGRAMYWMETEO_ID_PROGRAMYWMETEO_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:46.71" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_KLIENT_ID_PRODUKT]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:06:17.18" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX2_KONTRAKTLISTA_ID_KLIENT]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:16.82" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_SALES_ID_SALES_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:26.41" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IX1_KONTRAKT_KOREKTY_ID_FAKTURAKORYGOWANA]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:39:28.81" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX1_BLOKLISTA_ID_BLOKRODZAJ_IS_NOT_FOR_BB]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:49.12" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[_WA_Sys_00000002_719DA93E]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:11.47" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[IX1_BLOKPERIOD_OKRESBLOKPERIOD]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.16" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_KLIENT_EMAIL]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:41.22" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[SPOTLISTA_ID_KONTRAKT_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:39.59" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_CURRENCY_ID_CURRENCY_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:55.2" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_SESJA_ID_SESJA_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:50.75" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_543_ID_PAKIET_ELEMENT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:29.94" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_ID_BRAND_ID_OKRES]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:04:12.06" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX1_BLOKLISTA_GODZINAEMISJI]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:27.74" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_ID_KONTRAKT_WARTOSCCENNIKOWA]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:27.22" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_CHANNEL_PRZELICZNIK_ID_CHANNEL_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.07" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IX1_KONTRAKT_KOREKTY_READY_FOR_INVOICE_DATAWYSTAWIENIAFAKTURY]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:39:26.86" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_ID_KASETA]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:19.95" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Statistics="[DNIOTWARTE_PK_P_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:49.56" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[FK_KONTRAKT_KOREKTY_1_ID_POWODKOREKTY_FK_IDX]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:37:35.21" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IDX1_BLOKLISTA_ID_BLOKRODZAJ1]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:26.16" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[INTEG_360_ID_STATUS_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:34.71" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_TYPSPOTUWZLECENIU_ID_TYPSPOTUWZLECENIU_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:30.57" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[FK_KK_ID_KONTRAKT_FK_IDX]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:37:33.34" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_DOUSUNIECIA]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:02:57.74" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[FK_KASETALISTA_1_ID_KASETA_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:38.47" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_3_ID_TRYBPLATNOSCI_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:07.85" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_BRAND_ID_BRAND_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:53.11" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_ID_KONTRAKT]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:24.22" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_VAT_ID_VAT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:32.62" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[_WA_Sys_00000002_483D37A6]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:10.98" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[_WA_Sys_00000002_204E7686]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:37:31.22" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_BLOKPERIOD_LENGTHINDEX_ID_LENGTHINDEX_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.06" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IX1_KONTRAKT_KOREKTYD0AE7]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:38:33.27" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_6_ID_CRMFORMAT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:13.96" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[FK_PRESUF_ID_PRESUF_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:15.1" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[IX1_KONTRAKTLISTA_DOUSUNIECIA_DATAOD]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T12:02:55.64" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_KONTRAKTLISTA_5_ID_KLASTER_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:11.89" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[KONTRAKTLISTA_P_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:56:06.78" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Statistics="[FK_WALUTA_ID_WALUTA_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.08" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX1_BLOKLISTA_SYS_GODZINAEMISJIOD]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:52.69" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_ISTODELETE]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:53:31.29" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[FK_BLOKPROGRAM_ID_BLOKPROGRAM_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:13.3" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[IX1_SPOTLISTA_GODZINAEMISJI]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:52:01" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Statistics="[IDX_KONTRAKT_KOREKTY]" ModificationCount="1186" SamplingPercent="100" LastUpdate="2026-08-14T05:39:24.76" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Statistics="[_WA_Sys_00000003_3553B50D]" ModificationCount="141" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.35" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Statistics="[FK_PRODUKT_ID_PRODUKT_FK_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:57:22.2" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Statistics="[IX1_BLOKLISTA_ID_PRESUF_DELETED]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:55:50.88" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Statistics="[FK_PROGRAMLISTA_ID_PROGRAMLISTA_FK_IDX]" ModificationCount="149" SamplingPercent="100" LastUpdate="2026-08-14T05:35:28.61" />
+              <StatisticsInfo Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Statistics="[UNQ_SPOTLISTA_1_UN_IDX]" ModificationCount="0" SamplingPercent="100" LastUpdate="2026-08-17T11:51:54.14" />
+            </OptimizerStatsUsage>
+            <WaitStats>
+              <Wait WaitType="CXSYNC_PORT" WaitTimeMs="377" WaitCount="5" />
+              <Wait WaitType="RESERVED_MEMORY_ALLOCATION_EXT" WaitTimeMs="98" WaitCount="10221" />
+              <Wait WaitType="CXPACKET" WaitTimeMs="83" WaitCount="1206" />
+              <Wait WaitType="HTDELETE" WaitTimeMs="32" WaitCount="36" />
+              <Wait WaitType="HTREPARTITION" WaitTimeMs="30" WaitCount="36" />
+              <Wait WaitType="BMPBUILD" WaitTimeMs="10" WaitCount="12" />
+              <Wait WaitType="LATCH_EX" WaitTimeMs="2" WaitCount="22" />
+              <Wait WaitType="HTBUILD" WaitTimeMs="2" WaitCount="36" />
+              <Wait WaitType="SOS_SCHEDULER_YIELD" WaitTimeMs="2" WaitCount="608" />
+              <Wait WaitType="MEMORY_ALLOCATION_EXT" WaitTimeMs="1" WaitCount="821" />
+            </WaitStats>
+            <QueryTimeStats CpuTime="2588" ElapsedTime="681" />
+            <RelOp AvgRowSize="21" EstimateCPU="0.149465" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="102818" LogicalOp="Gather Streams" NodeId="0" Parallel="true" PhysicalOp="Parallelism" EstimatedTotalSubtreeCost="73.1238">
+              <OutputList>
+                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                <ColumnReference Column="Expr1009" />
+              </OutputList>
+              <RunTimeInformation>
+                <RunTimeCountersPerThread Thread="0" ActualRows="89169" Batches="0" ActualEndOfScans="1" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="665" ActualCPUms="9" />
+              </RunTimeInformation>
+              <Parallelism>
+                <RelOp AvgRowSize="21" EstimateCPU="0.0569556" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="102818" LogicalOp="Left Outer Join" NodeId="1" Parallel="true" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="72.9742">
+                  <OutputList>
+                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                    <ColumnReference Column="Expr1009" />
+                  </OutputList>
+                  <MemoryFractions Input="0.998729" Output="0.998729" />
+                  <RunTimeInformation>
+                    <RunTimeCountersPerThread Thread="4" ActualRows="22300" Batches="36" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="8" ActualCPUms="4" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                    <RunTimeCountersPerThread Thread="3" ActualRows="22271" Batches="36" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="7" ActualCPUms="4" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                    <RunTimeCountersPerThread Thread="2" ActualRows="22300" Batches="36" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="6" ActualCPUms="3" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                    <RunTimeCountersPerThread Thread="1" ActualRows="22298" Batches="36" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="9" ActualCPUms="8" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                    <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                  </RunTimeInformation>
+                  <Hash BitmapCreator="true">
+                    <DefinedValues>
+                      <DefinedValue>
+                        <ColumnReference Column="Opt_Bitmap1139" />
+                      </DefinedValue>
+                    </DefinedValues>
+                    <HashKeysBuild>
+                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                    </HashKeysBuild>
+                    <HashKeysProbe>
+                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                    </HashKeysProbe>
+                    <RelOp AvgRowSize="19" EstimateCPU="0.000685451" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="102818" LogicalOp="Inner Join" NodeId="2" Parallel="true" PhysicalOp="Adaptive Join" IsAdaptive="true" AdaptiveThresholdRows="21284.4" EstimatedTotalSubtreeCost="33.4593" EstimatedJoinType="Hash Match">
+                      <OutputList>
+                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="4" ActualRows="17309" Batches="20" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" ActualJoinType="Hash Match" />
+                        <RunTimeCountersPerThread Thread="3" ActualRows="16624" Batches="19" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" ActualJoinType="Hash Match" />
+                        <RunTimeCountersPerThread Thread="2" ActualRows="1003" Batches="2" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" ActualJoinType="Hash Match" />
+                        <RunTimeCountersPerThread Thread="1" ActualRows="54233" Batches="61" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" ActualJoinType="Hash Match" />
+                        <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualJoinType="Hash Match" />
+                      </RunTimeInformation>
+                      <AdaptiveJoin BitmapCreator="true" Optimized="true">
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                          </DefinedValue>
+                          <DefinedValue>
+                            <ColumnReference Column="Opt_Bitmap1135" />
+                          </DefinedValue>
+                        </DefinedValues>
+                        <HashKeysBuild>
+                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                        </HashKeysBuild>
+                        <HashKeysProbe>
+                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                        </HashKeysProbe>
+                        <OuterReferences>
+                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                        </OuterReferences>
+                        <RelOp AvgRowSize="11" EstimateCPU="0.00506166" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="75924.9" LogicalOp="Inner Join" NodeId="4" Parallel="true" PhysicalOp="Adaptive Join" IsAdaptive="true" AdaptiveThresholdRows="3883.38" EstimatedTotalSubtreeCost="0.87577" EstimatedJoinType="Nested Loops">
+                          <OutputList>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="4" ActualRows="13070" Batches="15" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="3" ActualCPUms="3" ActualJoinType="Nested Loops" />
+                            <RunTimeCountersPerThread Thread="3" ActualRows="31349" Batches="35" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="7" ActualCPUms="7" ActualJoinType="Nested Loops" />
+                            <RunTimeCountersPerThread Thread="2" ActualRows="23880" Batches="27" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="6" ActualCPUms="6" ActualJoinType="Nested Loops" />
+                            <RunTimeCountersPerThread Thread="1" ActualRows="21999" Batches="25" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Row" ActualElapsedms="5" ActualCPUms="5" ActualJoinType="Nested Loops" />
+                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualJoinType="Nested Loops" />
+                          </RunTimeInformation>
+                          <AdaptiveJoin BitmapCreator="true" Optimized="false">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Column="Opt_Bitmap1141" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <HashKeysBuild>
+                              <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="IDBLOKPERIOD" />
+                            </HashKeysBuild>
+                            <HashKeysProbe>
+                              <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="ID_OKRES" />
+                            </HashKeysProbe>
+                            <OuterReferences>
+                              <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="IDBLOKPERIOD" />
+                            </OuterReferences>
+                            <RelOp AvgRowSize="11" EstimateCPU="0.000114667" EstimateIO="0.003125" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="170" EstimatedRowsRead="170" LogicalOp="Index Seek" NodeId="6" Parallel="true" PhysicalOp="Index Seek" EstimatedTotalSubtreeCost="0.00323967" TableCardinality="22310">
+                              <OutputList>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="IDBLOKPERIOD" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="4" ActualRows="25" ActualRowsRead="25" Batches="1" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="2" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="3" ActualRows="124" ActualRowsRead="124" Batches="1" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="3" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="2" ActualRows="21" ActualRowsRead="21" Batches="1" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="3" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="1" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="1" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="IDBLOKPERIOD" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Index="[IX1_BLOKPERIOD_OKRESBLOKPERIOD]" Alias="[bd]" IndexKind="NonClustered" Storage="RowStore" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="OKRESBLOKPERIOD" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="(24319)">
+                                            <Const ConstValue="(24319)" />
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                            <RelOp AvgRowSize="15" EstimateCPU="3.01327" EstimateIO="16.6535" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="82253.4" EstimatedRowsRead="8225340" LogicalOp="Index Scan" NodeId="8" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="19.6668" TableCardinality="8225340">
+                              <OutputList>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="ID_OKRES" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="4" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="3" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="2" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="1" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                  </DefinedValue>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="ID_OKRES" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Index="[IX1_KONTRAKTLISTA_ID_OKRES]" Alias="[k]" IndexKind="NonClustered" Storage="RowStore" />
+                                <Predicate>
+                                  <ScalarOperator ScalarString="PROBE([Opt_Bitmap1141],[Brookselka_flash].[dbo].[KONTRAKTLISTA].[ID_OKRES] as [k].[ID_OKRES])">
+                                    <Intrinsic FunctionName="PROBE">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Column="Opt_Bitmap1141" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="ID_OKRES" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </Intrinsic>
+                                  </ScalarOperator>
+                                </Predicate>
+                              </IndexScan>
+                            </RelOp>
+                            <RelOp AvgRowSize="11" EstimateCPU="0.000648279" EstimateIO="0.00386574" EstimateRebinds="169" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="446.617" EstimatedRowsRead="446.617" LogicalOp="Index Seek" NodeId="11" Parallel="true" PhysicalOp="Index Seek" EstimatedTotalSubtreeCost="0.76168" TableCardinality="8225340">
+                              <OutputList>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                              </OutputList>
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="4" ActualRows="13070" ActualRowsRead="13070" Batches="0" ActualEndOfScans="39" ActualExecutions="39" ActualExecutionMode="Row" ActualElapsedms="1" ActualCPUms="1" ActualScans="39" ActualLogicalReads="191" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="3" ActualRows="31349" ActualRowsRead="31349" Batches="0" ActualEndOfScans="46" ActualExecutions="46" ActualExecutionMode="Row" ActualElapsedms="4" ActualCPUms="4" ActualScans="46" ActualLogicalReads="287" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="2" ActualRows="23880" ActualRowsRead="23880" Batches="0" ActualEndOfScans="40" ActualExecutions="40" ActualExecutionMode="Row" ActualElapsedms="3" ActualCPUms="3" ActualScans="40" ActualLogicalReads="241" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="1" ActualRows="21999" ActualRowsRead="21999" Batches="0" ActualEndOfScans="45" ActualExecutions="45" ActualExecutionMode="Row" ActualElapsedms="3" ActualCPUms="3" ActualScans="45" ActualLogicalReads="250" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                              </RunTimeInformation>
+                              <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                <DefinedValues>
+                                  <DefinedValue>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                  </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Index="[FK_OKRES_ID_OKRES_FK_IDX]" Alias="[k]" IndexKind="NonClustered" Storage="RowStore" />
+                                <SeekPredicates>
+                                  <SeekPredicateNew>
+                                    <SeekKeys>
+                                      <Prefix ScanType="EQ">
+                                        <RangeColumns>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="ID_OKRES" />
+                                        </RangeColumns>
+                                        <RangeExpressions>
+                                          <ScalarOperator ScalarString="[Brookselka_flash].[dbo].[BLOKPERIOD].[IDBLOKPERIOD] as [bd].[IDBLOKPERIOD]">
+                                            <Identifier>
+                                              <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPERIOD]" Alias="[bd]" Column="IDBLOKPERIOD" />
+                                            </Identifier>
+                                          </ScalarOperator>
+                                        </RangeExpressions>
+                                      </Prefix>
+                                    </SeekKeys>
+                                  </SeekPredicateNew>
+                                </SeekPredicates>
+                              </IndexScan>
+                            </RelOp>
+                          </AdaptiveJoin>
+                        </RelOp>
+                        <RelOp AvgRowSize="15" EstimateCPU="3.85156" EstimateIO="28.6809" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="105137" EstimatedRowsRead="10513700" LogicalOp="Index Scan" NodeId="13" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="32.5325" TableCardinality="10513700">
+                          <OutputList>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="4" ActualRows="17309" ActualRowsRead="2608100" Batches="20" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="188" ActualCPUms="188" ActualScans="1" ActualLogicalReads="9743" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="3" ActualRows="16624" ActualRowsRead="2555789" Batches="19" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="188" ActualCPUms="188" ActualScans="1" ActualLogicalReads="9537" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="2" ActualRows="1003" ActualRowsRead="2626568" Batches="2" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="186" ActualCPUms="186" ActualScans="1" ActualLogicalReads="9755" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="1" ActualRows="54233" ActualRowsRead="2723207" Batches="61" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="193" ActualCPUms="193" ActualScans="1" ActualLogicalReads="10219" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Index="[FK_KK_ID_KONTRAKT_FK_IDX]" Alias="[kk]" IndexKind="NonClustered" Storage="RowStore" />
+                            <Predicate>
+                              <ScalarOperator ScalarString="PROBE([Opt_Bitmap1135],[Brookselka_flash].[dbo].[KONTRAKT_KOREKTY].[ID_KONTRAKT] as [kk].[ID_KONTRAKT])">
+                                <Intrinsic FunctionName="PROBE">
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Opt_Bitmap1135" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Intrinsic>
+                              </ScalarOperator>
+                            </Predicate>
+                          </IndexScan>
+                        </RelOp>
+                        <RelOp AvgRowSize="15" EstimateCPU="0.00015849" EstimateIO="0.003125" EstimateRebinds="75923.9" EstimateRewinds="0" EstimatedExecutionMode="Row" EstimateRows="1.3542" EstimatedRowsRead="1.3542" LogicalOp="Index Seek" NodeId="17" Parallel="true" PhysicalOp="Index Seek" EstimatedTotalSubtreeCost="72.9743" TableCardinality="10513700">
+                          <OutputList>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                          </OutputList>
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="4" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="3" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="2" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="1" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Row" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                          </RunTimeInformation>
+                          <IndexScan Ordered="true" ScanDirection="FORWARD" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="IDKK" />
+                              </DefinedValue>
+                              <DefinedValue>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                              </DefinedValue>
+                            </DefinedValues>
+                            <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Index="[FK_KK_ID_KONTRAKT_FK_IDX]" Alias="[kk]" IndexKind="NonClustered" Storage="RowStore" />
+                            <SeekPredicates>
+                              <SeekPredicateNew>
+                                <SeekKeys>
+                                  <Prefix ScanType="EQ">
+                                    <RangeColumns>
+                                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKT_KOREKTY]" Alias="[kk]" Column="ID_KONTRAKT" />
+                                    </RangeColumns>
+                                    <RangeExpressions>
+                                      <ScalarOperator ScalarString="[Brookselka_flash].[dbo].[KONTRAKTLISTA].[IDKONTRAKT] as [k].[IDKONTRAKT]">
+                                        <Identifier>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[KONTRAKTLISTA]" Alias="[k]" Column="IDKONTRAKT" />
+                                        </Identifier>
+                                      </ScalarOperator>
+                                    </RangeExpressions>
+                                  </Prefix>
+                                </SeekKeys>
+                              </SeekPredicateNew>
+                            </SeekPredicates>
+                          </IndexScan>
+                        </RelOp>
+                      </AdaptiveJoin>
+                    </RelOp>
+                    <RelOp AvgRowSize="17" EstimateCPU="8.1025E-06" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="2430.75" LogicalOp="Compute Scalar" NodeId="18" Parallel="true" PhysicalOp="Compute Scalar" EstimatedTotalSubtreeCost="39.4586">
+                      <OutputList>
+                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                        <ColumnReference Column="Expr1009" />
+                      </OutputList>
+                      <RunTimeInformation>
+                        <RunTimeCountersPerThread Thread="4" ActualRows="6952" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                        <RunTimeCountersPerThread Thread="3" ActualRows="6847" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                        <RunTimeCountersPerThread Thread="2" ActualRows="7001" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                        <RunTimeCountersPerThread Thread="1" ActualRows="6923" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                        <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                      </RunTimeInformation>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1009" />
+                            <ScalarOperator ScalarString="[Expr1007]">
+                              <Identifier>
+                                <ColumnReference Column="Expr1007" />
+                              </Identifier>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp AvgRowSize="17" EstimateCPU="0.021329" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="2430.75" LogicalOp="Aggregate" NodeId="19" Parallel="true" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="39.4586">
+                          <OutputList>
+                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                            <ColumnReference Column="Expr1007" />
+                          </OutputList>
+                          <MemoryFractions Input="0" Output="0" />
+                          <RunTimeInformation>
+                            <RunTimeCountersPerThread Thread="4" ActualRows="6952" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="10" ActualCPUms="10" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="3" ActualRows="6847" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="9" ActualCPUms="9" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="2" ActualRows="7001" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="9" ActualCPUms="8" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="1" ActualRows="6923" Batches="8" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="10" ActualCPUms="9" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                          </RunTimeInformation>
+                          <Hash>
+                            <DefinedValues>
+                              <DefinedValue>
+                                <ColumnReference Column="Expr1007" />
+                                <ScalarOperator ScalarString="MAX([Brookselka_flash].[dbo].[DNIOTWARTE].[BLOKDATA] as [dt].[BLOKDATA])">
+                                  <Aggregate AggType="MAX" Distinct="false">
+                                    <ScalarOperator>
+                                      <Identifier>
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="BLOKDATA" />
+                                      </Identifier>
+                                    </ScalarOperator>
+                                  </Aggregate>
+                                </ScalarOperator>
+                              </DefinedValue>
+                            </DefinedValues>
+                            <HashKeysBuild>
+                              <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                            </HashKeysBuild>
+                            <RelOp AvgRowSize="17" EstimateCPU="0.170677" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="113388" LogicalOp="Inner Join" NodeId="20" Parallel="true" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="39.4373">
+                              <OutputList>
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="BLOKDATA" />
+                              </OutputList>
+                              <MemoryFractions Input="0" Output="0" />
+                              <RunTimeInformation>
+                                <RunTimeCountersPerThread Thread="4" ActualRows="351679" Batches="391" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="15" ActualCPUms="14" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="3" ActualRows="341365" Batches="380" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="14" ActualCPUms="14" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="2" ActualRows="346000" Batches="385" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="15" ActualCPUms="14" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="1" ActualRows="347731" Batches="387" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="15" ActualCPUms="14" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                              </RunTimeInformation>
+                              <Hash>
+                                <DefinedValues />
+                                <HashKeysBuild>
+                                  <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="IDDNIOTWARTE" />
+                                </HashKeysBuild>
+                                <HashKeysProbe>
+                                  <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="ID_DNIOTWARTE" />
+                                </HashKeysProbe>
+                                <RelOp AvgRowSize="17" EstimateCPU="0.135235" EstimateIO="1.07053" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="368681" EstimatedRowsRead="368681" LogicalOp="Index Scan" NodeId="21" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="1.20577" TableCardinality="368681">
+                                  <OutputList>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="IDDNIOTWARTE" />
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="BLOKDATA" />
+                                  </OutputList>
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="4" ActualRows="87335" ActualRowsRead="87335" Batches="98" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="10" ActualCPUms="10" ActualScans="1" ActualLogicalReads="378" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="3" ActualRows="93778" ActualRowsRead="93778" Batches="105" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="11" ActualCPUms="11" ActualScans="1" ActualLogicalReads="378" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="2" ActualRows="92545" ActualRowsRead="92545" Batches="103" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="11" ActualCPUms="10" ActualScans="1" ActualLogicalReads="374" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="1" ActualRows="95023" ActualRowsRead="95023" Batches="106" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="11" ActualCPUms="10" ActualScans="1" ActualLogicalReads="383" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                  </RunTimeInformation>
+                                  <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="IDDNIOTWARTE" />
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Alias="[dt]" Column="BLOKDATA" />
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[DNIOTWARTE]" Index="[DNIOTWARTE_IDX_BLOKDATA]" Alias="[dt]" IndexKind="NonClustered" Storage="RowStore" />
+                                  </IndexScan>
+                                </RelOp>
+                                <RelOp AvgRowSize="15" EstimateCPU="0.224031" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="113388" LogicalOp="Inner Join" NodeId="22" Parallel="true" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="38.0608">
+                                  <OutputList>
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                    <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="ID_DNIOTWARTE" />
+                                  </OutputList>
+                                  <MemoryFractions Input="0" Output="0" />
+                                  <RunTimeInformation>
+                                    <RunTimeCountersPerThread Thread="4" ActualRows="351679" Batches="391" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="18" ActualCPUms="18" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="3" ActualRows="341365" Batches="380" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="19" ActualCPUms="17" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="2" ActualRows="346000" Batches="385" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="19" ActualCPUms="18" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="1" ActualRows="347731" Batches="387" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="18" ActualCPUms="18" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                    <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                  </RunTimeInformation>
+                                  <Hash>
+                                    <DefinedValues />
+                                    <HashKeysBuild>
+                                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="IDBLOKPROGRAM" />
+                                    </HashKeysBuild>
+                                    <HashKeysProbe>
+                                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="ID_BLOKPROGRAM" />
+                                    </HashKeysProbe>
+                                    <RelOp AvgRowSize="15" EstimateCPU="0.185695" EstimateIO="1.40979" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="506299" EstimatedRowsRead="506299" LogicalOp="Index Scan" NodeId="23" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="1.59549" TableCardinality="506299">
+                                      <OutputList>
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="IDBLOKPROGRAM" />
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="ID_DNIOTWARTE" />
+                                      </OutputList>
+                                      <RunTimeInformation>
+                                        <RunTimeCountersPerThread Thread="4" ActualRows="130293" ActualRowsRead="130293" Batches="145" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="13" ActualCPUms="13" ActualScans="1" ActualLogicalReads="515" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="3" ActualRows="117318" ActualRowsRead="117318" Batches="131" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="12" ActualCPUms="12" ActualScans="1" ActualLogicalReads="462" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="2" ActualRows="126692" ActualRowsRead="126692" Batches="141" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="12" ActualCPUms="12" ActualScans="1" ActualLogicalReads="498" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="1" ActualRows="131996" ActualRowsRead="131996" Batches="147" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="13" ActualCPUms="13" ActualScans="1" ActualLogicalReads="520" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                      </RunTimeInformation>
+                                      <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                        <DefinedValues>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="IDBLOKPROGRAM" />
+                                          </DefinedValue>
+                                          <DefinedValue>
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Alias="[bp]" Column="ID_DNIOTWARTE" />
+                                          </DefinedValue>
+                                        </DefinedValues>
+                                        <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKPROGRAM]" Index="[FK_DNIOTWARTE_ID_DNIOTWARTE_FK_IDX]" Alias="[bp]" IndexKind="NonClustered" Storage="RowStore" />
+                                      </IndexScan>
+                                    </RelOp>
+                                    <RelOp AvgRowSize="15" EstimateCPU="0.992712" EstimateIO="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="113414" LogicalOp="Inner Join" NodeId="24" Parallel="true" PhysicalOp="Hash Match" EstimatedTotalSubtreeCost="36.2413">
+                                      <OutputList>
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                        <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="ID_BLOKPROGRAM" />
+                                      </OutputList>
+                                      <MemoryFractions Input="0" Output="0" />
+                                      <RunTimeInformation>
+                                        <RunTimeCountersPerThread Thread="4" ActualRows="351679" Batches="391" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="64" ActualCPUms="61" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="3" ActualRows="341365" Batches="380" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="66" ActualCPUms="62" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="2" ActualRows="346000" Batches="385" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="71" ActualCPUms="62" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="1" ActualRows="347731" Batches="387" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="70" ActualCPUms="62" ActualScans="0" ActualLogicalReads="0" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                        <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                      </RunTimeInformation>
+                                      <Hash>
+                                        <DefinedValues />
+                                        <HashKeysBuild>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="IDBLOK" />
+                                        </HashKeysBuild>
+                                        <HashKeysProbe>
+                                          <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_BLOK" />
+                                        </HashKeysProbe>
+                                        <RelOp AvgRowSize="15" EstimateCPU="0.912734" EstimateIO="4.68683" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="2489130" EstimatedRowsRead="2489130" LogicalOp="Index Scan" NodeId="25" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="5.59956" TableCardinality="2489130">
+                                          <OutputList>
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="IDBLOK" />
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="ID_BLOKPROGRAM" />
+                                          </OutputList>
+                                          <RunTimeInformation>
+                                            <RunTimeCountersPerThread Thread="4" ActualRows="642502" ActualRowsRead="642502" Batches="714" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="65" ActualCPUms="65" ActualScans="1" ActualLogicalReads="1666" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="3" ActualRows="622160" ActualRowsRead="622160" Batches="692" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="60" ActualCPUms="60" ActualScans="1" ActualLogicalReads="1573" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="2" ActualRows="608547" ActualRowsRead="608547" Batches="677" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="59" ActualCPUms="59" ActualScans="1" ActualLogicalReads="1634" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="1" ActualRows="615924" ActualRowsRead="615924" Batches="685" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="58" ActualCPUms="58" ActualScans="1" ActualLogicalReads="1564" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                          </RunTimeInformation>
+                                          <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="IDBLOK" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Alias="[bl]" Column="ID_BLOKPROGRAM" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[BLOKLISTA]" Index="[IX1_BLOKLISTA_ID_BLOKRODZAJ_IS_NOT_FOR_BB]" Alias="[bl]" IndexKind="NonClustered" Storage="RowStore" />
+                                          </IndexScan>
+                                        </RelOp>
+                                        <RelOp AvgRowSize="15" EstimateCPU="4.1548" EstimateIO="25.4942" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch" EstimateRows="113414" EstimatedRowsRead="11341400" LogicalOp="Index Scan" NodeId="27" Parallel="true" PhysicalOp="Index Scan" EstimatedTotalSubtreeCost="29.649" TableCardinality="11341400">
+                                          <OutputList>
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_BLOK" />
+                                            <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                          </OutputList>
+                                          <RunTimeInformation>
+                                            <RunTimeCountersPerThread Thread="4" ActualRows="351679" ActualRowsRead="2876332" Batches="391" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="241" ActualCPUms="241" ActualScans="1" ActualLogicalReads="8793" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="3" ActualRows="341365" ActualRowsRead="2872685" Batches="380" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="245" ActualCPUms="245" ActualScans="1" ActualLogicalReads="8936" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="2" ActualRows="346000" ActualRowsRead="2721621" Batches="385" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="242" ActualCPUms="242" ActualScans="1" ActualLogicalReads="8529" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="1" ActualRows="347731" ActualRowsRead="2870793" Batches="387" ActualEndOfScans="0" ActualExecutions="1" ActualExecutionMode="Batch" ActualElapsedms="243" ActualCPUms="242" ActualScans="1" ActualLogicalReads="8878" ActualPhysicalReads="0" ActualReadAheads="0" ActualLobLogicalReads="0" ActualLobPhysicalReads="0" ActualLobReadAheads="0" />
+                                            <RunTimeCountersPerThread Thread="0" ActualRows="0" Batches="0" ActualEndOfScans="0" ActualExecutions="0" ActualExecutionMode="Batch" ActualElapsedms="0" ActualCPUms="0" />
+                                          </RunTimeInformation>
+                                          <IndexScan Ordered="false" ForcedIndex="false" ForceSeek="false" ForceScan="false" NoExpandHint="false" Storage="RowStore">
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_BLOK" />
+                                              </DefinedValue>
+                                              <DefinedValue>
+                                                <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <Object Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Index="[IX1_SPOTLISTA_ID_KASETA]" Alias="[s]" IndexKind="NonClustered" Storage="RowStore" />
+                                            <Predicate>
+                                              <ScalarOperator ScalarString="PROBE([Opt_Bitmap1139],[Brookselka_flash].[dbo].[SPOTLISTA].[ID_KONTRAKT] as [s].[ID_KONTRAKT])">
+                                                <Intrinsic FunctionName="PROBE">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Column="Opt_Bitmap1139" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[Brookselka_flash]" Schema="[dbo]" Table="[SPOTLISTA]" Alias="[s]" Column="ID_KONTRAKT" />
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Intrinsic>
+                                              </ScalarOperator>
+                                            </Predicate>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </Hash>
+                                    </RelOp>
+                                  </Hash>
+                                </RelOp>
+                              </Hash>
+                            </RelOp>
+                          </Hash>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Hash>
+                </RelOp>
+              </Parallelism>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>
