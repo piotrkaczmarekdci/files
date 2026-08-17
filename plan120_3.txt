@@ -1,0 +1,108 @@
+drop table if exists #ppm;
+
+SELECT mo.ID_MASTERKONTRAKT, COUNT(*) AS ISPREFERREDPOSITIONMULTI
+INTO #ppm
+FROM MULTI_ORDERS mo
+JOIN KONTRAKTLISTA k2  ON k2.IDKONTRAKT = mo.ID_MULTIKONTRAKT
+JOIN SPOTLISTA s2      ON s2.ID_KONTRAKT = k2.IDKONTRAKT
+JOIN SPOTLISTA_POZYCJA sp ON sp.ID_SPOT = s2.IDSPOT
+WHERE mo.ID_MASTERKONTRAKT IN (
+    SELECT IDKONTRAKT FROM KONTRAKTLISTA WHERE id_okres = 47497
+)
+GROUP BY mo.ID_MASTERKONTRAKT;
+
+
+SELECT
+ k.idkontrakt,
+ISNULL(mo.TotalProcGRP, 0)          AS SplitGRP,
+ISNULL(ppc.ISPREFERREDPOSITION, 0)  AS ISPREFERREDPOSITION,
+ISNULL(ppm.ISPREFERREDPOSITIONMULTI,0) AS ISPREFERREDPOSITIONMULTI,
+ISNULL(mk.MultiPakietBudget, 0)     AS MultiPakietBudget,
+ISNULL(mo.IlePodzlecenMIX, 0)       AS IlePodzlecenMIX,
+cast(0 as float) as MultiSponsWartosc, 
+ISNULL(sk.KW, 0)                    AS KW,
+ISNULL(fbm.iloscspotownotopt, 0)    AS iloscspotownotopt,
+cast(0 as float) as SpotyMultiPakietBudget,
+ISNULL(rm.iloscspotow, 0)           AS iloscspotow, 
+ISNULL(rm.PrognozaGRP, 0)           AS PrognozaGRP, 
+ISNULL(rm.PrognozaGRPA1649, 0)      AS PrognozaGRPA1649,
+ISNULL(rm.PredGRPA1649, 0)          AS PredGRPA1649,
+ISNULL(rm.PredGRP, 0)               AS PredGRP
+--into #tblValues 
+FROM dbo.KONTRAKTLISTA k
+INNER JOIN blokperiod bd ON bd.IDBLOKPERIOD = k.ID_OKRES
+OUTER APPLY (
+    SELECT SUM(mo.PROC_GRP) AS TotalProcGRP,
+           COUNT(*)         AS IlePodzlecenMIX
+    FROM dbo.MULTI_ORDERS mo
+    WHERE mo.ID_MASTERKONTRAKT = k.IDKONTRAKT
+) mo
+OUTER APPLY (
+    SELECT TOP (1) 1 AS ISPREFERREDPOSITION
+    FROM dbo.SPOTLISTA_POZYCJA sp
+    INNER JOIN SPOTLISTA s ON sp.ID_SPOT = s.IDSPOT
+    WHERE sp.ID_KONTRAKT = k.IDKONTRAKT
+) ppc
+left outer JOIN #ppm ppm on ppm.ID_MASTERKONTRAKT=k.IDKONTRAKT
+--OUTER APPLY (
+--    SELECT COUNT(*) AS ISPREFERREDPOSITIONMULTI
+--    FROM dbo.MULTI_ORDERS mo
+--    INNER JOIN dbo.KONTRAKTLISTA k2 ON mo.ID_MULTIKONTRAKT = k2.IDKONTRAKT
+--    INNER JOIN SPOTLISTA s2 ON k2.IDKONTRAKT = s2.ID_KONTRAKT
+--    INNER JOIN dbo.SPOTLISTA_POZYCJA sp ON s2.IDSPOT = sp.ID_SPOT
+--    WHERE mo.ID_MASTERKONTRAKT = k.IDKONTRAKT
+--) ppm
+OUTER APPLY (
+    SELECT SUM(k12.BUDGETNETTO) AS MultiPakietBudget
+    FROM dbo.MULTI_ORDERS mo
+    INNER JOIN dbo.KONTRAKTLISTA k12 ON k12.IDKONTRAKT = mo.ID_MULTIKONTRAKT
+    INNER JOIN dbo.BLOKPERIOD bp12 ON bp12.IDBLOKPERIOD = k12.ID_OKRES
+    WHERE mo.ID_MASTERKONTRAKT = k.IDKONTRAKT
+) mk
+OUTER APPLY (
+    SELECT COUNT(*) AS KW
+    FROM dbo.KONTRAKT_SALESKOREKTY ks
+    WHERE ks.ID_KONTRAKT = k.IDKONTRAKT AND ks.ISKOREKTAWEWNETRZNA = 1
+) sk
+OUTER APPLY (
+    SELECT COUNT(*) AS iloscspotownotopt
+    FROM dbo.MULTI_ORDERS mo
+    INNER JOIN dbo.KONTRAKTLISTA k12 ON k12.IDKONTRAKT = mo.ID_MULTIKONTRAKT
+    INNER JOIN SPOTLISTA s12 ON s12.ID_KONTRAKT = k12.IDKONTRAKT
+    INNER JOIN dbo.SPOTLISTA_FIXINBREAK sfb ON s12.IDSPOT = sfb.ID_SPOT
+    WHERE mo.ID_MASTERKONTRAKT = k.IDKONTRAKT
+) fbm
+OUTER APPLY (
+    SELECT COUNT(*) AS iloscspotownotopt1
+    FROM SPOTLISTA s
+    INNER JOIN dbo.SPOTLISTA_FIXINBREAK sfb ON s.IDSPOT = sfb.ID_SPOT
+    WHERE s.ID_KONTRAKT = k.IDKONTRAKT
+) fbs
+OUTER APPLY (
+    SELECT SUM(s12.items)                 AS iloscspotow,
+           SUM(s12.GRPPROGNOZA)           AS PrognozaGRP,
+           SUM(s12.PROGNOZAGRPA1649MONO)  AS PrognozaGRPA1649,
+           SUM(s12.PredGRPA1649Mono)      AS PredGRPA1649,
+           SUM(s12.SYS_RTGPRED)           AS PredGRP,
+           SUM(s12.wartoscprzeliczonanetto) AS SpotyMultiPakietBudget1
+    FROM dbo.MULTI_ORDERS mo
+    INNER JOIN dbo.KONTRAKTLISTA k12 ON k12.IDKONTRAKT = mo.ID_MULTIKONTRAKT
+    INNER JOIN vw_ratings s12 ON s12.idkontrakt = k12.IDKONTRAKT
+    WHERE mo.ID_MASTERKONTRAKT = k.IDKONTRAKT
+) rm
+OUTER APPLY (
+    SELECT SUM(ks.BUDGETNETTO) AS MultiSponsWartoscc1
+    FROM dbo.KONTRAKT_SUBORDER ks
+    WHERE ks.ID_KONTRAKT = k.IDKONTRAKT
+) so
+OUTER APPLY (
+    SELECT spo.items                AS iloscspotow1,
+           spo.GRPPROGNOZA          AS PrognozaGRP1,
+           spo.PROGNOZAGRPA1649MONO AS PrognozaGRPA16491,
+           spo.PredGRPA1649Mono     AS PredGRPA16491,
+           spo.SYS_RTGPRED          AS PredGRP1,
+           spo.wartoscprzeliczonanetto  AS SpotyMultiPakietBudget
+    FROM vw_ratings spo
+    WHERE spo.idkontrakt = k.IDKONTRAKT
+) rs
+WHERE k.id_okres=47497
