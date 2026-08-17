@@ -1,0 +1,23 @@
+SELECT
+    kk.IDKK,
+    kk.ID_KONTRAKT,
+
+    spot_agg.BLOKDATA_MAX
+
+
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = (2026*12+7)
+
+-- MAX(BLOKDATA) zamiast subquery z 4 tabelami
+LEFT JOIN (
+    SELECT s.id_kontrakt, MAX(dt.BLOKDATA) AS BLOKDATA_MAX
+    FROM SPOTLISTA s
+    JOIN BLOKLISTA   bl ON s.ID_BLOK          = bl.IDBLOK
+    JOIN BLOKPROGRAM bp ON bp.IDBLOKPROGRAM   = bl.ID_BLOKPROGRAM
+    JOIN DNIOTWARTE  dt ON dt.IDDNIOTWARTE         = bp.ID_DNIOTWARTE   
+    GROUP BY s.id_kontrakt
+) spot_agg ON spot_agg.id_kontrakt = k.idkontrakt
+
+;
