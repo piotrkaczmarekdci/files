@@ -1,0 +1,37 @@
+declare @DataOd as datetime2;
+set @DataOd='2026-06-01';
+declare @DataDo as datetime2;
+set @DataDo='2026-07-31';
+declare @OkresOd as int;
+set @OkresOd=2026*12+6;
+declare @OkresDo as int;
+set @OkresDo=2026*12+7;
+
+
+select kk.idkk
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = @okresOD
+					  and (kk.datawystawieniafaktury between @DataOd and @DataDo)
+union
+select kk.idkk
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = @okresOD
+					  and (kk.datawystawienia between @DataOd and @DataDo)
+union
+select kk.idkk
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = @okresDO
+					  and (kk.datawystawieniafaktury between @DataOd and @DataDo)
+union
+select kk.idkk
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = @okresDO
+					  and (kk.datawystawienia between @DataOd and @DataDo)
