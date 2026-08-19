@@ -1,0 +1,12 @@
+declare @DataOd as datetime2;
+set @DataOd='2026-07-01';
+declare @DataDo as datetime2;
+set @DataDo='2026-07-31';
+
+
+select kk.idkk, k.NUMERKONTRAKT
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = (2026*12+7)
+					  and ((kk.datawystawieniafaktury between @DataOd and @DataDo) or (kk.datawystawienia between @DataOd and @DataDo))
