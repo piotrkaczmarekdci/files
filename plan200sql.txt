@@ -1,0 +1,119 @@
+
+select kk.idkk, k.numerkontrakt
+into #tblFaktOrder
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = 24319
+					  and (kk.datawystawieniafaktury between '2026-07-01' and '2026-07-31')
+union
+select kk.idkk, k.numerkontrakt
+FROM kontrakt_korekty kk
+JOIN kontraktlista k   ON kk.id_kontrakt = k.idkontrakt
+JOIN blokperiod bd     ON k.id_okres = bd.idblokperiod
+                      AND bd.okresblokperiod = 24319
+					  and (kk.datawystawienia between '2026-07-01' and '2026-07-31')
+
+CREATE INDEX ix_tmp_tblFaktOrder ON #tblFaktOrder (idkk)
+
+CREATE INDEX ix_tmp2_tblFaktOrder ON #tblFaktOrder (numerkontrakt)
+
+SELECT
+    kk.IDKK,
+    kk.ID_KONTRAKT,
+    spot_agg.BLOKDATA_MAX,
+    kse.ISPMP,
+    ISNULL(luk1.cnt, 0)         AS iloscumow1,
+    ISNULL(luk2.cnt, 0)         AS iloscumow2,
+    ISNULL(fz_agg.cnt, 0)       AS IsFZ,
+    fz_top.numerfaktury         AS numerFZ,
+    fz_top.idFZ                 AS IdFZ,
+    sz_top.NUMERZAMOWIENIA      AS numerZL,
+    mop.IS_WO_DIGITAL,
+    ISNULL(vm.iloscsub,  0) AS IsMasterZlecenie,
+	ISNULL(vo.idkontrakt,  0) AS IsPodzlecenie,
+	vo.numerkontrakt AS MasterNumer
+	INTO #tblFaktDocs2
+FROM kontrakt_korekty kk
+JOIN #tblFaktOrder tb   ON kk.idkk = tb.idkk
+-- MAX(BLOKDATA) zamiast subquery z 4 tabelami
+LEFT JOIN (
+    SELECT s.id_kontrakt, MAX(dt.BLOKDATA) AS BLOKDATA_MAX
+    FROM SPOTLISTA s
+    JOIN BLOKLISTA   bl ON s.ID_BLOK          = bl.IDBLOK
+    JOIN BLOKPROGRAM bp ON bp.IDBLOKPROGRAM   = bl.ID_BLOKPROGRAM
+    JOIN DNIOTWARTE  dt ON dt.IDDNIOTWARTE         = bp.ID_DNIOTWARTE
+    GROUP BY s.id_kontrakt
+) spot_agg ON spot_agg.id_kontrakt = kk.id_kontrakt
+-- ISPMP
+LEFT JOIN KONTRAKTLISTA_SYSTEM_EXT kse ON kse.NUMERKONTRAKT = tb.numerkontrakt
+-- iloscumow1
+LEFT JOIN (
+    SELECT id_kontraktlista, COUNT(*) AS cnt
+    FROM REZ_LU_KONTRAKT
+    GROUP BY id_kontraktlista
+) luk1 ON luk1.id_kontraktlista = kk.id_kontrakt
+-- iloscumow2
+LEFT JOIN (
+    SELECT mo.id_multikontrakt, COUNT(*) AS cnt
+    FROM multi_orders mo
+    JOIN kontraktlista    kmaster ON kmaster.idkontrakt        = mo.id_masterkontrakt
+    JOIN REZ_LU_KONTRAKT  luk     ON luk.id_kontraktlista      = kmaster.idkontrakt
+    GROUP BY mo.id_multikontrakt
+) luk2 ON luk2.id_multikontrakt = kk.id_kontrakt
+-- IsFZ (COUNT)
+LEFT JOIN (
+    SELECT fzkk.id_kk, COUNT(*) AS cnt
+    FROM fakturazbiorcza_kk fzkk
+    JOIN fakturazbiorcza fz ON fzkk.id_fz = fz.idfz
+    GROUP BY fzkk.id_kk
+) fz_agg ON fz_agg.id_kk = kk.idkk
+-- numerFZ + IdFZ (jeden JOIN zamiast dwóch subquery)
+LEFT JOIN (
+    SELECT fzkk.id_kk,
+           fz.numerfaktury,
+           fz.idFZ,
+           ROW_NUMBER() OVER (PARTITION BY fzkk.id_kk ORDER BY fz.idfz) AS rn
+    FROM fakturazbiorcza_kk fzkk
+    JOIN fakturazbiorcza fz ON fzkk.id_fz = fz.idfz
+) fz_top ON fz_top.id_kk = kk.idkk
+        AND fz_top.rn = 1
+-- numerZL (TOP 1 › ROW_NUMBER)
+LEFT JOIN (
+    SELECT szc.ID_SUBORDER,
+           sz.NUMERZAMOWIENIA,
+           ROW_NUMBER() OVER (PARTITION BY szc.ID_SUBORDER ORDER BY sz.IDSZ) AS rn
+    FROM sponsoring_zamowienie_channels szc
+    JOIN sponsoring_zamowienie sz ON sz.IDSZ = szc.ID_SZ
+) sz_top ON sz_top.ID_SUBORDER = kk.ID_KONTRAKT
+        AND sz_top.rn = 1
+-- IS_WO_DIGITAL
+LEFT JOIN MULTI_ORDERS_PARAMS mop ON mop.ID_KONTRAKT = kk.ID_KONTRAKT
+LEFT JOIN vw_multiorder vm ON kk.ID_KONTRAKT = vm.idkontrakt
+left join vw_masterorder vo ON kk.ID_KONTRAKT=vo.id_multikontrakt;
+
+CREATE INDEX ix_tmp_tblFaktDocs2 ON #tblFaktDocs2 (idkk)
+
+select kk.IDKK, kk.ID_KONTRAKT, kk.OGRPKUPIONE, kk.NGRPKUPIONE, kk.OCPPNETTO, kk.NCPPNETTO, kk.OBUDGETNETTO, kk.NBUDGETNETTO, kk.ODOP_EXCLUSIVEPROCENT,
+       kk.NDOP_EXCLUSIVEPROCENT, kk.ODOP_ZNAKPROCENT, kk.NDOP_ZNAKPROCENT, kk.ODOP_LINIAPROCENT, kk.NDOP_LINIAPROCENT, kk.ODOP_DWATOWARYPROCENT,
+       kk.NDOP_DWATOWARYPROCENT, kk.ORAB_SPECPROCENT, kk.NRAB_SPECPROCENT, kk.ORAB_PAKIETPROCENT, kk.NRAB_PAKIETPROCENT, kk.ORAB_INWESTPROCENT,
+       kk.NRAB_INWESTPROCENT, kk.ORAB_UDZIALPROCENT, kk.NRAB_UDZIALPROCENT, kk.ORAB_NOWYPROCENT, kk.NRAB_NOWYPROCENT, kk.ORAB_AGENCYJNYPROCENT,
+       kk.NRAB_AGENCYJNYPROCENT, kk.DATAZMIANY, kk.OGRPKUPIONEFLAGA, kk.NGRPKUPIONEFLAGA, kk.OBUDGETNETTOFLAGA, kk.NBUDGETNETTOFLAGA,
+       kk.OCPPTEMPFLAGA, kk.NCPPTEMPFLAGA, kk.TYPDOKUMENTU, kk.NUMERFAKTURY, kk.KSEFNUMERFAKTURY, kk.DATAWYSTAWIENIA, kk.DATAWYSTAWIENIAFAKTURY, kk.DATAOSTATNIEJWPLATY,
+       kk.READY_FOR_INVOICE, kk.SENT_ACCDEPT, kk.INVOICE_FILENAME, kk.OKRES_FAKTURY, k.NUMERKONTRAKT, kk.TYPDOKUMENTU_KOD, kk.MANUAL_ACC,
+       kk.STAWKAVAT, sv.WARTOSCVAT, kk.SUNBRUTTO, kk.SUNNETTO, kk.SUNZAPLACONO, a.nazwapodmiot as NAZWAAGENCJA, kl.nazwapodmiot as NAZWAKLIENT,
+       P.NAZWAPRODUKT, tk.nazwatypkontrakt, rk.nazwarodzajkontrakt, kk.powodkorekty, sl.nazwiskosales, kk.DATAPLATNOSCIFAKTURY, k.piwo, kk.ISKOREKTAWEWNETRZNA,
+       k.podpisany, aw.skrotwaluta, atp.nazwatrybplatnosci, k.przedplata_zaplacona_kwota, k.przedplata_zaplacona_data, k.SAP_INSTANCJA,
+       k.dataod, k.datado, k.iloscdniaktywne, sl2.nazwisko as planer, kk.IS_FINISHING_POST_INVOICE, kk.IS_PREPAYMENT_INVOICE, a.nippodmiot as NIPAgencja, kl.nippodmiot as NIPKlient, k.fakturadlaagencji,
+       ak.id_agencja, py.idpakiet, bd.id_channel as idchannel, bd.okresblokperiod, a.id_sap as agencja_sap, kl.id_sap as klient_sap, py.isCompositeOrder,
+       fo.BLOKDATA_MAX as lastday, fo.IsPodzlecenie, fo.IsMasterZlecenie, fo.MasterNumer, fo.ISPMP, fo.iloscumow1, fo.iloscumow2, fo.IsFZ, fo.numerFZ, fo.IdFZ, fo.numerZL, fo.IS_WO_DIGITAL,
+(select ch.nazwachannel from channels ch where ch.idchannel=bd.id_channel) as nazwachannel,
+(select gk.nazwagrupakanalow from channels ch, ADM_GRUPAKANALOW gk where gk.ID_GRUPAKANALOW=ch.ID_GRUPA and ch.idchannel=bd.id_channel) as grupa
+from #tblFaktDocs2 fo, kontrakt_korekty kk, kontraktlista k, adm_stawkivat sv, ak_agencjaklient ak, ak_podmioty a, ak_podmioty kl,
+     PRODUKTLISTA P, typkontrakt tk, rodzajkontrakt rk, saleslista sl, sa_pakiety py, blokperiod bd, adm_waluty aw, adm_trybplatnosci atp, saleslista sl2
+where fo.idkk=kk.idkk and kk.id_kontrakt=k.idkontrakt and k.id_okres=bd.idblokperiod
+      and k.id_vat= sv.idvat and k.id_currency=aw.idwaluta and k.id_trybplatnosci=atp.idtrybplatnosci
+      AND K.ID_KLIENT=ak.idagencjaklient and ak.id_agencja=a.idpodmiot and ak.id_klient=kl.idpodmiot
+      and K.ID_PRODUKT=P.IDPRODUKT and py.idpakiet=k.id_pakiet and py.ID_ORDERTYPE=tk.idtypkontrakt and
+      k.id_rodzajkontrakt=rk.idrodzajkontrakt and
+      sl.idsales=kk.ID_INVOICEPERSON and sl2.idsales=k.id_forsales 
